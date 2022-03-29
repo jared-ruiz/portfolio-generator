@@ -1,18 +1,18 @@
+//allows us to use the fs module (file system)
+const fs = require("fs");
+
+//module for creating page template
+const generatePage = require("./src/page-template.js");
+
 //takes command line inputs and cuts off after the 1 index to only capture user input
-const profileDateArgs = process.argv.slice(2, process.argv.length);
-console.log(profileDateArgs);
+const profileDateArgs = process.argv.slice(2);
 
-//prints user input 1 by 1
-const printProfileData = profileDataArr => {
-    //this for loop iteration over an array
-    for (let i = 0; i < profileDataArr.length; i+=1) {
-        console.log(profileDataArr[i]);
-    }
+//assigns commandline input to variables [0][1]
+const [name, github] = profileDateArgs;
 
-    console.log("==================");
-    
-    //is the same as above
-    profileDataArr.forEach(profileItem => console.log(profileItem));
-}
+//file name that will be created/output file, data that is being written, callback that will handle errors + success message
+fs.writeFile("./index.html", generatePage(name, github), err => {
+    if (err) throw new Error(err);
 
-printProfileData(profileDateArgs);
+    console.log("Portfolio complete! Check out index.html to see the output!");
+});
