@@ -1,5 +1,5 @@
 //allows us to use the fs module (file system)
-const fs = require("fs");
+const {writeFile, copyFile } = require('./utils/generate-site');
 const inquirer = require("inquirer");
 const { type } = require("os");
 
@@ -140,20 +140,18 @@ Add a New Project
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-
-        fs.writeFile('./index.html', pageHTML, err => {
-          if (err) throw new Error(err);
-
-          console.log('Page created! Check out index.html in this directory to see it!');
+        return generatePage(portfolioData);
     })
-
-// //utilize page-template.js
-// const pageHTML = generatePage(name, github);
-
-// //file name that will be created/output file, data that is being written, callback that will handle errors + success message
-// fs.writeFile("./index.html", pageHTML, err => {
-//     if (err) throw err;
-
-//     console.log("Portfolio complete! Check out index.html to see the output!");
-});
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
+    });
